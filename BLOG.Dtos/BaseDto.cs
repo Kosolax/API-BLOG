@@ -1,13 +1,8 @@
 ﻿namespace BLOG.Dtos
 {
-    using BLOG.Dtos.Validation.Service;
-    using BLOG.Entities;
-
     public abstract class BaseDto<T>
-        where T : BaseEntity
+        where T : class
     {
-        public ValidationService<T>? ValidationService { get; set; }
-
         public abstract T CreateEntity();
     }
 }

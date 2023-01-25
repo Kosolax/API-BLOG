@@ -1,9 +1,12 @@
 ﻿namespace BLOG.DataAccess
 {
     using BLOG.DataAccess.Seed;
+    using BLOG.Entities;
+
+    using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
 
-    public class BlogContext : DbContext
+    public class BlogContext : IdentityDbContext<UserEntity>
     {
         public BlogContext(DbContextOptions<BlogContext> options)
             : base(options)
@@ -26,6 +29,8 @@
             {
                 action.Invoke();
             }
+
+            base.OnModelCreating(modelBuilder);
         }
     }
 }
