@@ -9,6 +9,8 @@
         {
             List<IContextSeed> listSeed = new List<IContextSeed>
             {
+                new RoleSeed(context),
+                new UserSeed(context),
             };
 
             foreach (IContextSeed contextSeed in listSeed)
