@@ -80,6 +80,12 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+app.UseCors(builder => builder
+       .AllowAnyHeader()
+       .AllowAnyMethod()
+       .AllowAnyOrigin()
+    );
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
