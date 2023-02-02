@@ -20,6 +20,6 @@
 
         Task<List<T>> ListSkipTake(int skip, int take);
 
-        Task<T> Update(T itemToUpdate, params object[] keyValues);
+        Task<T> Update(T itemToUpdate, T oldItem);
     }
 }

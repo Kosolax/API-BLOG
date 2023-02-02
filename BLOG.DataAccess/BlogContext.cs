@@ -1,5 +1,6 @@
 ﻿namespace BLOG.DataAccess
 {
+    using BLOG.DataAccess.Configuration;
     using BLOG.DataAccess.Seed;
     using BLOG.Entities;
 
@@ -13,6 +14,8 @@
         {
         }
 
+        public DbSet<TagEntity> Tags { get; set; }
+
         public async Task EnsureSeedData(bool isProduction)
         {
             ContextInitializer initializer = new ContextInitializer();
@@ -23,6 +26,7 @@
         {
             List<Action> listConfiguration = new List<Action>
             {
+                new TagConfiguration(modelBuilder).Execute,
             };
 
             foreach (Action action in listConfiguration)

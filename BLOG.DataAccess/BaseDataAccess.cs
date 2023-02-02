@@ -56,9 +56,8 @@
             return await this.Context.Set<T>().Skip(skip).Take(take).ToListAsync();
         }
 
-        public virtual async Task<T> Update(T itemToUpdate, params object[] keyValues)
+        public virtual async Task<T> Update(T itemToUpdate, T item)
         {
-            T item = await this.Context.Set<T>().FindAsync(keyValues);
             this.Context.Entry(item).CurrentValues.SetValues(itemToUpdate);
             await this.Context.SaveChangesAsync();
 

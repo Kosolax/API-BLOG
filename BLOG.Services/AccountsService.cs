@@ -1,7 +1,7 @@
 ﻿namespace BLOG.Services
 {
     using BLOG.DataAccess.Enum;
-    using BLOG.Dtos;
+    using BLOG.Dtos.Authentication;
     using BLOG.Entities;
     using BLOG.Services.Handlers;
     using BLOG.Services.Interfaces;

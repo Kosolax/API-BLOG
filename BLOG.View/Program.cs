@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using BLOG.Entities;
+using BLOG.DataAccess.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -51,9 +52,14 @@ builder.Services.AddAuthentication(options =>
 
 // Register Handlers
 builder.Services.AddScoped<JwtHandler>();
+builder.Services.AddScoped<PaginationHandler>();
+
+// Register DataAccess
+builder.Services.AddScoped<ITagDataAccess, TagDataAccess>();
 
 // Register Services
 builder.Services.AddScoped<IAccountsService, AccountsService>();
+builder.Services.AddScoped<ITagsService, TagsService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
