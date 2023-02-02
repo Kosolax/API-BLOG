@@ -1,7 +1,6 @@
 ﻿namespace Blog.Web.Controllers
 {
-    using BLOG.Dtos;
-    using BLOG.Dtos.Response;
+    using BLOG.Dtos.Authentication;
     using BLOG.Services.Interfaces;
 
     using Microsoft.AspNetCore.Mvc;

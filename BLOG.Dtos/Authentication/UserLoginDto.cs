@@ -1,4 +1,4 @@
-﻿namespace BLOG.Dtos
+﻿namespace BLOG.Dtos.Authentication
 {
     using BLOG.Entities;
     using System.ComponentModel.DataAnnotations;

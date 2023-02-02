@@ -1,4 +1,4 @@
-﻿namespace BLOG.Dtos.Response
+﻿namespace BLOG.Dtos.Authentication
 {
     public class AuthResponseDto
     {

@@ -1,7 +1,6 @@
 ﻿namespace BLOG.Services.Interfaces
 {
-    using BLOG.Dtos;
-
+    using BLOG.Dtos.Authentication;
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
