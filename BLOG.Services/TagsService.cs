@@ -75,6 +75,11 @@
             Result.Success();
         }
 
+        public async Task<bool> DoListExist(List<int> list)
+        {
+            return await this._dataAccess.DoListExist(list);
+        }
+
         public async Task<Result<TagDto>> Get(int id)
         {
             TagEntity entity = await this._dataAccess.Find(id);
@@ -92,21 +97,9 @@
             return Result.Success(dto);
         }
 
-        public async Task<Result<List<TagDto>>> List()
+        public Task<Result<List<TagDto>>> List()
         {
-            List<TagEntity> entities = await this._dataAccess.List();
-            if (entities == null)
-            {
-                return Result.Failure<List<TagDto>>("Could not fetch entitites");
-            }
-
-            List<TagDto> dtos = this.CreateDtos(entities);
-            if (dtos == null)
-            {
-                return Result.Failure<List<TagDto>>("Could not map entitites into dtos");
-            }
-
-            return Result.Success(dtos);
+            throw new NotImplementedException();
         }
 
         public async Task<Result<AdminPaginationTagsDto>> ListWithPagination(int pageNumber)
@@ -170,16 +163,7 @@
             return Result.Success(dto);
         }
 
-        private TagDto CreateDto(TagEntity tagEntity)
-        {
-            return new TagDto()
-            {
-                Id = tagEntity.Id,
-                Name = tagEntity.Name,
-            };
-        }
-
-        private List<TagDto> CreateDtos(List<TagEntity> tagEntities)
+        public List<TagDto> CreateDtos(List<TagEntity?> tagEntities)
         {
             List<TagDto> tags = new List<TagDto>();
 
@@ -194,6 +178,20 @@
             }
 
             return tags;
+        }
+
+        private TagDto CreateDto(TagEntity tagEntity)
+        {
+            return new TagDto()
+            {
+                Id = tagEntity.Id,
+                Name = tagEntity.Name,
+            };
+        }
+
+        public async Task<Dictionary<int, TagDto>> ListFromIds(List<int> ids)
+        {
+            return this.CreateDtos(await this._dataAccess.ListFromIds(ids)).ToDictionary(x => x.Id);
         }
     }
 }

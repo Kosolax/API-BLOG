@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
 
-    public abstract class BaseAdminPaginationDto<T, T1> where T : class
+    public abstract class BaseAdminPaginationDto<T>
     {
         public int CurrentPage { get; set; }
 
@@ -10,6 +10,6 @@
 
         public int TotalPages { get; set; }
 
-        public List<T1>? Items { get; set; }
+        public List<T>? Items { get; set; }
     }
 }
