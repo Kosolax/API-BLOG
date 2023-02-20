@@ -131,7 +131,6 @@
             {
                 CurrentPage = pageNumber,
                 Items = dtos,
-                TotalItems = countTags,
                 TotalPages = totalPages,
             };
 
