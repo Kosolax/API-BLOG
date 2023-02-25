@@ -97,9 +97,21 @@
             return Result.Success(dto);
         }
 
-        public Task<Result<List<TagDto>>> List()
+        public async Task<Result<List<TagDto>>> List()
         {
-            throw new NotImplementedException();
+            List<TagEntity> entities = await this._dataAccess.List();
+            if (entities == null)
+            {
+                return Result.Failure<List<TagDto>>("Could not fetch entitites");
+            }
+
+            List<TagDto> dtos = this.CreateDtos(entities);
+            if (dtos == null)
+            {
+                return Result.Failure<List<TagDto>>("Could not map entitites into dtos");
+            }
+
+            return Result.Success(dtos);
         }
 
         public async Task<Result<AdminPaginationTagsDto>> ListWithPagination(int pageNumber)

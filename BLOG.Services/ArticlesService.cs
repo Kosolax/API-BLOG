@@ -289,6 +289,8 @@
                     Tags = dictionary[articleEntity.Id],
                     Title = articleEntity.Title,
                     Views = articleEntity.Views,
+                    Slug = articleEntity.Slug,
+                    Id = articleEntity.Id,
                 });
             }
 

@@ -59,18 +59,18 @@
             Dictionary<int, List<TagDto>> dictionary = new Dictionary<int, List<TagDto>>();
 
             List<ArticleTagEntity> articleTagEntities = await this._articlesTagsDataAccess.GetArticleTagsFromArticleIds(articleIds);
-            List<int> tagIds = articleTagEntities.Select(x => x.ArticleEntityId).ToList();
+            List<int> tagIds = articleTagEntities.Select(x => x.TagEntityId).ToList();
             Dictionary<int, TagDto> tagDtos = await this._tagsService.ListFromIds(tagIds);
 
             foreach (var articleTagEntity in articleTagEntities)
             {
                 if (dictionary.ContainsKey(articleTagEntity.ArticleEntityId))
                 {
-                    dictionary[articleTagEntity.ArticleEntityId].Add(tagDtos[articleTagEntity.ArticleEntityId]);
+                    dictionary[articleTagEntity.ArticleEntityId].Add(tagDtos[articleTagEntity.TagEntityId]);
                 }
                 else
                 {
-                    dictionary.Add(articleTagEntity.ArticleEntityId, new List<TagDto>() { tagDtos[articleTagEntity.ArticleEntityId] });
+                    dictionary.Add(articleTagEntity.ArticleEntityId, new List<TagDto>() { tagDtos[articleTagEntity.TagEntityId] });
                 }
             }
 
