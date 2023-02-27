@@ -7,7 +7,6 @@
 
     using CSharpFunctionalExtensions;
 
-    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
@@ -26,21 +25,18 @@
         public async Task<Result> CreateOrUpdateArticlesTags(List<TagDto> tags, int articleId)
         {
             List<ArticleTagEntity> entities = new List<ArticleTagEntity>();
-            List<int> ids = tags.Select(x => x.Id).ToList();
-
-            // TODO GERER UPDATE ET CREATE
             Result deleteResult = await this.DeleteArticlesTags(articleId);
             if (deleteResult.IsFailure)
             {
                 return Result.Failure("Error while deleting old tags");
             }
 
-            foreach (var id in ids)
+            foreach (var tag in tags)
             {
                 entities.Add(new ArticleTagEntity
                 {
                     ArticleEntityId = articleId,
-                    TagEntityId = id,
+                    TagEntityId = tag.Id,
                 });
             }
 

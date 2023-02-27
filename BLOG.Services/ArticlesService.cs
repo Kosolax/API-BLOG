@@ -2,6 +2,7 @@
 {
     using BLOG.DataAccess.Interfaces;
     using BLOG.Dtos.Article;
+    using BLOG.Dtos.Image;
     using BLOG.Dtos.Tag;
     using BLOG.Entities;
     using BLOG.Services.Handlers;
@@ -22,6 +23,8 @@
 
         private readonly ITagsService _tagsService;
 
+        private readonly IImageService _imageService;
+
         private readonly PaginationHandler _paginationHandler;
 
         private readonly IConfigurationSection _paginationConfiguration;
@@ -32,9 +35,15 @@
 
         private int _descriptionSize;
 
-        public ArticlesService(ITagsService tagsService, IArticleDataAccess dataAccess, PaginationHandler paginationHandler, IConfiguration configuration, IArticlesTagsService articlesTagsService)
+        public ArticlesService(IImageService imageService,
+            ITagsService tagsService,
+            IArticleDataAccess dataAccess,
+            PaginationHandler paginationHandler,
+            IConfiguration configuration,
+            IArticlesTagsService articlesTagsService)
         {
             this._dataAccess = dataAccess;
+            this._imageService = imageService;
             this._tagsService = tagsService;
             this._paginationHandler = paginationHandler;
             this._configuration = configuration;
@@ -49,6 +58,11 @@
             if (itemToCreate == null)
             {
                 return Result.Failure<ArticleDto>("Could not map dto into entity");
+            }
+
+            if (itemToCreate.Images == null || itemToCreate.Images.Count == 0)
+            {
+                return Result.Failure<ArticleDto>("Article must have images.");
             }
 
             if (itemToCreate.Tags == null || itemToCreate.Tags.Count == 0)
@@ -84,6 +98,24 @@
             Result articlesTagsResult = await this._articlesTagsService.CreateOrUpdateArticlesTags(itemToCreate.Tags, createdEntity.Id);
             if (articlesTagsResult.IsFailure)
             {
+                Result deleteArticlesTagsResult = await this._articlesTagsService.DeleteArticlesTags(createdEntity.Id);
+                if (deleteArticlesTagsResult.IsFailure)
+                {
+                    return Result.Failure<ArticleDto>("Error while creating");
+                }
+
+                await this._dataAccess.Delete(createdEntity.Id);
+            }
+
+            Result imagesResult = await this._imageService.CreateOrUpdateImages(itemToCreate.Images, createdEntity.Id);
+            if (imagesResult.IsFailure)
+            {
+                Result deleteImagesResult = await this._imageService.DeleteImages(createdEntity.Id);
+                if (deleteImagesResult.IsFailure)
+                {
+                    return Result.Failure<ArticleDto>("Error while creating");
+                }
+
                 Result deleteArticlesTagsResult = await this._articlesTagsService.DeleteArticlesTags(createdEntity.Id);
                 if (deleteArticlesTagsResult.IsFailure)
                 {
@@ -188,6 +220,11 @@
                 return Result.Failure<ArticleDto>("Could not map dto into entity");
             }
 
+            if (itemToUpdate.Images == null || itemToUpdate.Images.Count == 0)
+            {
+                return Result.Failure<ArticleDto>("Article must have images.");
+            }
+
             if (itemToUpdate.Tags == null || itemToUpdate.Tags.Count == 0)
             {
                 return Result.Failure<ArticleDto>("Article must have tags.");
@@ -239,6 +276,24 @@
                 await this._dataAccess.Delete(updatedEntity.Id);
             }
 
+            Result imagesResult = await this._imageService.CreateOrUpdateImages(itemToUpdate.Images, updatedEntity.Id);
+            if (imagesResult.IsFailure)
+            {
+                Result deleteImagesResult = await this._imageService.DeleteImages(updatedEntity.Id);
+                if (deleteImagesResult.IsFailure)
+                {
+                    return Result.Failure<ArticleDto>("Error while creating");
+                }
+
+                Result deleteArticlesTagsResult = await this._articlesTagsService.DeleteArticlesTags(updatedEntity.Id);
+                if (deleteArticlesTagsResult.IsFailure)
+                {
+                    return Result.Failure<ArticleDto>("Error while creating");
+                }
+
+                await this._dataAccess.Delete(updatedEntity.Id);
+            }
+
             Result<ArticleDto> result = await this.Get(updatedEntity.Slug);
             if (result.IsFailure)
             {
@@ -264,13 +319,13 @@
                 CreatedDate = entity.CreatedDate,
                 Description = entity.Description,
                 Slug = entity.Slug,
-                Thumbnail = entity.Thumbnail,
                 Title = entity.Title,
                 UpdatedDate = entity.UpdatedDate,
                 Views = entity.Views,
             };
 
             articleDto.Tags = await this._articlesTagsService.GetTagsFromArticleId(articleDto.Id);
+            articleDto.Images = await this._imageService.GetImagesFromArticleId(articleDto.Id);
             return articleDto;
         }
 
@@ -279,14 +334,14 @@
             List<LightAdminArticleDto> lightAdminArticleDtos = new List<LightAdminArticleDto>();
 
             List<int> articleIds = entities.Select(x => x.Id).ToList();
-            Dictionary<int, List<TagDto>> dictionary = await this._articlesTagsService.GetDictionaryArticleIdTagsFromArticleIds(articleIds);
+            Dictionary<int, List<TagDto>> dictionaryTags = await this._articlesTagsService.GetDictionaryArticleIdTagsFromArticleIds(articleIds);
 
             for (int i = 0; i < entities.Count; i++)
             {
                 ArticleEntity articleEntity = entities[i];
                 lightAdminArticleDtos.Add(new LightAdminArticleDto()
                 {
-                    Tags = dictionary[articleEntity.Id],
+                    Tags = dictionaryTags[articleEntity.Id],
                     Title = articleEntity.Title,
                     Views = articleEntity.Views,
                     Slug = articleEntity.Slug,

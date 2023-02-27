@@ -1,5 +1,6 @@
 ﻿namespace BLOG.Dtos.Article
 {
+    using BLOG.Dtos.Image;
     using BLOG.Dtos.Tag;
 
     public class ArticleDto
@@ -14,8 +15,6 @@
 
         public List<TagDto>? Tags { get; set; }
 
-        public string? Thumbnail { get; set; }
-
         public string? Title { get; set; }
 
         public DateTime? UpdatedDate { get; set; }
@@ -23,5 +22,7 @@
         public DateTime? CreatedDate { get; set; }
 
         public int Views { get; set; }
+
+        public List<ImageDto>? Images { get; set; }
     }
 }

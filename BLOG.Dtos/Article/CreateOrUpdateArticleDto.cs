@@ -1,5 +1,6 @@
 ﻿namespace BLOG.Dtos.Article
 {
+    using BLOG.Dtos.Image;
     using BLOG.Dtos.Tag;
     using BLOG.Entities;
 
@@ -13,7 +14,7 @@
 
         public List<TagDto>? Tags { get; set; }
 
-        public string? Thumbnail { get; set; }
+        public List<CreateOrUpdateImageDto> Images { get; set; }
 
         public string? Title { get; set; }
 
@@ -23,7 +24,6 @@
             {
                 Content = Content,
                 Slug = Slug,
-                Thumbnail = Thumbnail,
                 Title = Title,
             };
         }

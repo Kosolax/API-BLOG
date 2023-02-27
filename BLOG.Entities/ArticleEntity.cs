@@ -14,8 +14,6 @@
 
         public string? Slug { get; set; }
 
-        public string? Thumbnail { get; set; }
-
         public string? Title { get; set; }
 
         public DateTime? UpdatedDate { get; set; }
