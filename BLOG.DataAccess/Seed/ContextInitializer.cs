@@ -12,6 +12,8 @@
                 new RoleSeed(context),
                 new UserSeed(context),
                 new TagSeed(context),
+                new ArticleSeed(context),
+                new ImageSeed(context),
             };
 
             foreach (IContextSeed contextSeed in listSeed)

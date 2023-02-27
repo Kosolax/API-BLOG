@@ -56,10 +56,16 @@ builder.Services.AddScoped<PaginationHandler>();
 
 // Register DataAccess
 builder.Services.AddScoped<ITagDataAccess, TagDataAccess>();
+builder.Services.AddScoped<IArticleDataAccess, ArticleDataAccess>();
+builder.Services.AddScoped<IArticleTagDataAccess, ArticleTagDataAccess>();
+builder.Services.AddScoped<IImageDataAccess, ImageDataAccess>();
 
 // Register Services
 builder.Services.AddScoped<IAccountsService, AccountsService>();
 builder.Services.AddScoped<ITagsService, TagsService>();
+builder.Services.AddScoped<IArticlesService, ArticlesService>();
+builder.Services.AddScoped<IArticlesTagsService, ArticlesTagsService>();
+builder.Services.AddScoped<IImageService, ImageService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

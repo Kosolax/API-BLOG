@@ -3,6 +3,7 @@ using System;
 using BLOG.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BLOG.DataAccess.Migrations
 {
     [DbContext(typeof(BlogContext))]
-    partial class BlogContextModelSnapshot : ModelSnapshot
+    [Migration("20230220223703_AddArticle")]
+    partial class AddArticle
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -43,6 +46,10 @@ namespace BLOG.DataAccess.Migrations
                     b.Property<string>("Slug")
                         .IsRequired()
                         .HasColumnType("varchar(20)");
+
+                    b.Property<string>("Thumbnail")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -78,33 +85,6 @@ namespace BLOG.DataAccess.Migrations
                     b.HasIndex("TagEntityId");
 
                     b.ToTable("ArticlesTags", (string)null);
-                });
-
-            modelBuilder.Entity("BLOG.Entities.ImageEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("ArticleEntityId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Base64Image")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<bool>("IsThumbnail")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("Placeholder")
-                        .IsRequired()
-                        .HasColumnType("varchar(20)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ArticleEntityId");
-
-                    b.ToTable("Images", (string)null);
                 });
 
             modelBuilder.Entity("BLOG.Entities.TagEntity", b =>
@@ -339,17 +319,6 @@ namespace BLOG.DataAccess.Migrations
                     b.Navigation("ArticleEntity");
 
                     b.Navigation("TagEntity");
-                });
-
-            modelBuilder.Entity("BLOG.Entities.ImageEntity", b =>
-                {
-                    b.HasOne("BLOG.Entities.ArticleEntity", "ArticleEntity")
-                        .WithMany()
-                        .HasForeignKey("ArticleEntityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ArticleEntity");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

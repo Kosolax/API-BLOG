@@ -15,9 +15,19 @@
             return await this.Context.Tags.CountAsync(x => !x.IsDeleted);
         }
 
+        public async Task<bool> DoListExist(List<int> list)
+        {
+            return await this.Context.Tags.CountAsync(x => list.Contains(x.Id)) == list.Count();
+        }
+
         public override async Task<List<TagEntity>> List()
         {
             return await this.Context.Tags.Where(x => !x.IsDeleted).ToListAsync();
+        }
+
+        public async Task<List<TagEntity>> ListFromIds(List<int> ids)
+        {
+            return await this.Context.Tags.Where(x => ids.Contains(x.Id)).ToListAsync();
         }
 
         public override async Task<List<TagEntity>> ListSkipTake(int skip, int take)

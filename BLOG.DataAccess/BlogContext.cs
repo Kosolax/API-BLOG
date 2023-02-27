@@ -16,6 +16,12 @@
 
         public DbSet<TagEntity> Tags { get; set; }
 
+        public DbSet<ArticleEntity> Articles { get; set; }
+
+        public DbSet<ArticleTagEntity> ArticlesTags { get; set; }
+
+        public DbSet<ImageEntity> Images { get; set; }
+
         public async Task EnsureSeedData(bool isProduction)
         {
             ContextInitializer initializer = new ContextInitializer();
@@ -27,6 +33,9 @@
             List<Action> listConfiguration = new List<Action>
             {
                 new TagConfiguration(modelBuilder).Execute,
+                new ArticleConfiguration(modelBuilder).Execute,
+                new ArticleTagConfiguration(modelBuilder).Execute,
+                new ImageConfiguration(modelBuilder).Execute,
             };
 
             foreach (Action action in listConfiguration)
