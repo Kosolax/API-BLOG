@@ -22,5 +22,10 @@
         {
             return await this.Context.Articles.Where(x => !x.IsDeleted).Skip(skip).Take(take).ToListAsync();
         }
+
+        public async Task<List<ArticleEntity>> ListFromIdsSkipTake(List<int> ids, int skip, int take)
+        {
+            return await this.Context.Articles.Where(x => ids.Contains(x.Id)).Skip(skip).Take(take).ToListAsync();
+        }
     }
 }

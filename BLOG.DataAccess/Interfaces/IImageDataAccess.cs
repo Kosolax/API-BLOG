@@ -11,6 +11,8 @@
 
         Task DeleteFromArticleId(int articleId);
 
+        Task<List<ImageEntity>> ListThumbnailsFromArticleIds(List<int> articleIds);
+
         Task<List<ImageEntity>> GetImagesFromArticleId(int articleId);
     }
 }

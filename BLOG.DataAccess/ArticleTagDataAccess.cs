@@ -38,5 +38,40 @@
                 await this.Context.SaveChangesAsync();
             }
         }
+
+        public async Task<List<int>> ListArticleWithSearchAndTagsId(string search, List<int> ids)
+        {
+            List<int> articleKept = new List<int>();
+            Dictionary<int, List<int>> dictionaryArticleIdTagIds = await this.Context.ArticlesTags
+                .Include(x => x.ArticleEntity)
+                .Where(x => x.ArticleEntity != null &&
+                            !x.ArticleEntity.IsDeleted &&
+                            x.ArticleEntity.Title != null &&
+                            x.ArticleEntity.Description != null &&
+                            (search == null || (search != null && (x.ArticleEntity.Title.Contains(search) || x.ArticleEntity.Description.Contains(search))))
+                )
+                .GroupBy(x => x.ArticleEntityId)
+                .ToDictionaryAsync(x => x.Key, x => x.Select(x => x.TagEntityId).ToList());
+
+            foreach (var keypair in dictionaryArticleIdTagIds)
+            {
+                bool containsAllTags = true;
+                for (int j = 0; j < ids.Count; j++)
+                {
+                    if (!dictionaryArticleIdTagIds[keypair.Key].Contains(ids[j]))
+                    {
+                        containsAllTags = false;
+                    }
+                }
+
+                if (containsAllTags)
+                {
+                    articleKept.Add(keypair.Key);
+
+                }
+            }
+
+            return articleKept;
+        }
     }
 }

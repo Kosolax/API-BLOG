@@ -9,5 +9,7 @@
         public string? Base64Image { get; set; }
 
         public bool IsThumbnail { get; set; }
+
+        public int ArticleId { get; set; }
     }
 }

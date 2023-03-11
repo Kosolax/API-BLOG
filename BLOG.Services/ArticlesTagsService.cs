@@ -73,6 +73,11 @@
             return dictionary;
         }
 
+        public async Task<List<int>> ListArticleWithSearchAndTagsId(string search, List<int> ids)
+        {
+            return await this._articlesTagsDataAccess.ListArticleWithSearchAndTagsId(search, ids);
+        }
+
         public async Task<List<TagDto>> GetTagsFromArticleId(int articleId)
         {
             List<TagEntity> tagEntities = await this._articlesTagsDataAccess.GetTagsFromArticleId(articleId);
