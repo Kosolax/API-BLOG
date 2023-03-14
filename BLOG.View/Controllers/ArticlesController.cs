@@ -35,5 +35,18 @@
 
             return Ok(res.Value);
         }
+
+        [HttpGet]
+        [Route("{slug}")]
+        public async Task<IActionResult> Get(string slug)
+        {
+            Result<ArticleDto> res = await _service.Get(slug);
+            if (res.IsFailure)
+            {
+                return BadRequest(res.Error);
+            }
+
+            return Ok(res.Value);
+        }
     }
 }
