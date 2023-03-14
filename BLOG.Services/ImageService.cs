@@ -73,7 +73,16 @@
                 Base64Image = imageEntity.Base64Image,
                 IsThumbnail = imageEntity.IsThumbnail,
                 Placeholder = imageEntity.Placeholder,
+                ArticleId = imageEntity.ArticleEntityId,
             };
+        }
+
+        public async Task<Dictionary<int, ImageDto>> GetDictionaryArticleIdThumbnailFromArticleIds(List<int> articleIds)
+        {
+            List<ImageEntity> thumbnailEntities = await this._imageDataAccess.ListThumbnailsFromArticleIds(articleIds);
+            List<ImageDto> thumbnails = this.CreateDtos(thumbnailEntities);
+
+            return thumbnails.ToDictionary(x => x.ArticleId);
         }
     }
 }

@@ -11,5 +11,7 @@
         Task<List<ArticleTagEntity>> CreateRange(List<ArticleTagEntity> articleTags);
 
         Task DeleteFromArticleId(int articleId);
+
+        Task<List<int>> ListArticleWithSearchAndTagsId(string search, List<int> ids);
     }
 }

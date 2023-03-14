@@ -13,5 +13,7 @@
         Task<Result> CreateOrUpdateArticlesTags(List<TagDto> tags, int articleId);
 
         Task<Result> DeleteArticlesTags(int articleId);
+
+        Task<List<int>> ListArticleWithSearchAndTagsId(string search, List<int> ids);
     }
 }

@@ -213,6 +213,40 @@
             return Result.Success(paginatedTagsDto);
         }
 
+        public async Task<Result<ViewerPaginationArticlesDto>> ListWithPaginationWithSearchAndTags(int pageNumber, string search, List<int> tagsId)
+        {
+            List<int> articleIds = await this._articlesTagsService.ListArticleWithSearchAndTagsId(search, tagsId);
+            int totalPages = this._paginationHandler.GetTotalPages(articleIds.Count, this._articlePerPage);
+            pageNumber = this._paginationHandler.GetPageNumber(pageNumber, totalPages);
+
+            List<ArticleEntity> entities = new List<ArticleEntity>();
+            if (articleIds.Count != 0)
+            {
+                entities = await this._dataAccess.ListFromIdsSkipTake(articleIds, (pageNumber - 1) * this._articlePerPage, this._articlePerPage);
+            }
+
+            if (entities == null)
+            {
+                return Result.Failure<ViewerPaginationArticlesDto>("Could not fetch entitites");
+            }
+
+            List<LightViewerArticleDto> dtos = await this.CreateLightViewDtos(entities);
+            if (dtos == null)
+            {
+                return Result.Failure<ViewerPaginationArticlesDto>("Could not map entitites into dtos");
+            }
+
+            ViewerPaginationArticlesDto paginatedArticlesDto = new ViewerPaginationArticlesDto()
+            {
+                CurrentPage = pageNumber,
+                Items = dtos,
+                TotalItems = articleIds.Count,
+                TotalPages = totalPages,
+            };
+
+            return Result.Success(paginatedArticlesDto);
+        }
+
         public async Task<Result<ArticleDto>> Update(CreateOrUpdateArticleDto itemToUpdate, int id)
         {
             if (itemToUpdate == null)
@@ -350,6 +384,32 @@
             }
 
             return lightAdminArticleDtos;
+        }
+
+        private async Task<List<LightViewerArticleDto>> CreateLightViewDtos(List<ArticleEntity> entities)
+        {
+            List<LightViewerArticleDto> lightViewerDto = new List<LightViewerArticleDto>();
+
+            List<int> articleIds = entities.Select(x => x.Id).ToList();
+            Dictionary<int, List<TagDto>> dictionaryTags = await this._articlesTagsService.GetDictionaryArticleIdTagsFromArticleIds(articleIds);
+            Dictionary<int, ImageDto> dictionaryImages = await this._imageService.GetDictionaryArticleIdThumbnailFromArticleIds(articleIds);
+
+            for (int i = 0; i < entities.Count; i++)
+            {
+                ArticleEntity articleEntity = entities[i];
+                lightViewerDto.Add(new LightViewerArticleDto()
+                {
+                    Tags = dictionaryTags[articleEntity.Id],
+                    Title = articleEntity.Title,
+                    Slug = articleEntity.Slug,
+                    CreatedDate = articleEntity.CreatedDate,
+                    Description = articleEntity.Description,
+                    Images = new List<ImageDto>() { dictionaryImages[articleEntity.Id] },
+                    UpdatedDate = articleEntity.UpdatedDate,
+                });
+            }
+
+            return lightViewerDto;
         }
 
         private void SetDescription(ArticleEntity entity)

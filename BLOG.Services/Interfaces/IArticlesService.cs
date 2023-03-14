@@ -11,5 +11,7 @@
         Task<Result<AdminPaginationArticlesDto>> ListWithPagination(int pageNumber);
 
         Task<Result<ArticleDto>> Get(string slug);
+
+        Task<Result<ViewerPaginationArticlesDto>> ListWithPaginationWithSearchAndTags(int pageNumber, string search, List<int> tagsId);
     }
 }

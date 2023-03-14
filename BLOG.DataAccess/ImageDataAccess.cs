@@ -33,5 +33,10 @@
         {
             return await this.Context.Images.Where(x => x.ArticleEntityId == articleId).ToListAsync();
         }
+
+        public async Task<List<ImageEntity>> ListThumbnailsFromArticleIds(List<int> articleIds)
+        {
+            return await this.Context.Images.Where(x => articleIds.Contains(x.ArticleEntityId) && x.IsThumbnail).ToListAsync();
+        }
     }
 }
